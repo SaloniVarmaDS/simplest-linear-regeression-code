@@ -1,0 +1,40 @@
+import pandas as pd    #for cleaning and handeling missing values in data
+import numpy as np     #for slicing and array when you train and test data
+import matplotlib.pyplot as plt   #for scatter plot and other ploting graghs in code
+from sklearn import linear_model   #importing linear model
+from sklearn.metrics import mean_squared_error   #determing error in model 
+
+df =pd.read_csv(r"C:\Users\skvar\Downloads\archive (2).zip")    #reading file by entering file path
+df.head()    #printing first few columns of data
+
+print(df.keys())   # it shows attributes that we have in our data ,not necessary to use if you know your data well
+
+print(df.isnull())   #it finds null values in the data 
+print(df.fillna(method='pad'))    #it fills null values in data based on previous values
+df = df.dropna()    #it drops data that contain null values
+
+x = df['High'].values.reshape(-1, 1)    #creating x and y values here high and low are some attributes in data  
+y = df['Low'].values.reshape(-1, 1)     #we used reshape to make our data comfortable for 1D and 2D array or else it gives error when we use model.fit() code
+
+x_train = x[-30:]    #selecting training data
+x_test = x[:-30]
+
+y_train = y[-30:]
+y_test = y[:-30]    #selecting testing data
+
+model = linear_model.LinearRegression()    #activating linear regression model
+model.fit(x_train , y_train)    #fitting x and y values in model 
+
+predict = model.predict(x_test) 
+print("mean squared error",mean_squared_error(y_test,predict))    #findind average error in our model
+print("weights ts",model.coef_)   #find weight
+print("intercept",model.intercept_)    #find intercept
+
+#we successfully creted our model here now we will analyze it
+
+plt.scatter(x_test, y_test)   #creating a scatter plot 
+plt.show()
+
+plt.plot(x_test,predict, color='yellow')    #ploting graph
+plt.scatter(x_test , y_test,color='green')
+plt.show()
